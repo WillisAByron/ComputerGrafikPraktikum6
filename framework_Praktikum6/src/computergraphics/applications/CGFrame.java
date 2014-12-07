@@ -34,7 +34,7 @@ public class CGFrame extends AbstractCGFrame {
 
 	public final double MAX_X = 1;
 
-	public final double MAX_Y = 0.5;
+	public final double MAX_Y = 0.1;
 
 	public final double MAX_Z = 1;
 
@@ -57,7 +57,7 @@ public class CGFrame extends AbstractCGFrame {
 		super(timerInverval);
 		
 		RotationNode landscapeRotation = new RotationNode(90, new Vector3(1, 0, 0));
-		landscapeRotation.addChild(createLandscape(new Vector3(4, 2, 4)));
+		landscapeRotation.addChild(createLandscape(new Vector3(4, 1, 4)));
 		getRoot().addChild(landscapeRotation);
 		
 //		List<Vector3> wP = new ArrayList<>();
@@ -92,7 +92,7 @@ public class CGFrame extends AbstractCGFrame {
 		GenerateTerrain gt = new GenerateTerrain();
 		TriangleMesh newGround = null;
 		try {
-			newGround = gt.generateGround(MAX_X, MAX_Y, MAX_Z, STEP, heightFile);
+			newGround = gt.generateGroundWithTexture(MAX_X, MAX_Y, MAX_Z, STEP, heightFile, textureFileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

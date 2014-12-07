@@ -3,9 +3,15 @@ package computergraphics.terrain;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
+import javax.media.opengl.GLException;
+
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 import computergraphics.datastructures.Triangle;
 import computergraphics.datastructures.TriangleMesh;
@@ -18,13 +24,13 @@ public class GenerateTerrain {
 
 	public static final double MAX_X = 1;
 
-	public static final double MAX_Y = 0.1;
-
-	public static final double PRECISION = 0.02;
+	public static final double MAX_Y = 0.15;
 
 	public static final double MAX_Z = 1;
 
 	public static final double STEP = 0.005;
+	
+	public static final double PRECISION = 0.02;
 
 	public static final int SMOOTH_FACTOR = 100;
 
@@ -68,8 +74,15 @@ public class GenerateTerrain {
 		return generateGround(maxX, maxY, maxZ, step, heightField);
 	}
 	
-	public TriangleMesh generateGroundWithTexture(double maxX, double maxY, double maxZ, double step, String heightField, String textureFilrName) throws IOException {
-		//TODO
+	public TriangleMesh generateGroundWithTexture(double maxX, double maxY, double maxZ, double step, String heightField, String textureFileName) throws IOException {
+		InputStream is;
+		Texture tex = null;
+		try {
+			is = new FileInputStream(textureFileName);
+			tex = TextureIO.newTexture(is, false, "jpg");
+		} catch (GLException | IOException e) {
+		}
+		// TODO in die zwei Schleifen muss bei addVertex auch addTextureCoordinate rein.
 		TriangleMesh trMesh = new TriangleMesh();
 		BufferedImage bImage = ImageIO.read(new File(heightField));
 		final double maxStepsX = maxX / step;
@@ -81,14 +94,24 @@ public class GenerateTerrain {
 						maxStepsZ), z)));
 				int c = trMesh.addVertex(new Vertex(new Vector3(x,
 						getHeight(bImage, x, z + step, maxStepsX, maxStepsZ), z + step)));
-				trMesh.addTriangle(new Triangle(a, b, c));
+				int tA
+				int tB
+				int tC
+				trMesh.addTriangle(new Triangle(a, b, c, tA, tB, tC));
+				
+				
+				
+				
 				int aOppeside = trMesh.addVertex(new Vertex(new Vector3(x + step, getHeight(bImage, x + step, z + step,
 						maxStepsX, maxStepsZ), z + step)));
 				int bOppeside = trMesh.addVertex(new Vertex(new Vector3(x + step, getHeight(bImage, x + step, z,
 						maxStepsX, maxStepsZ), z)));
 				int cOppeside = trMesh.addVertex(new Vertex(new Vector3(x, getHeight(bImage, x, z + step, maxStepsX,
 						maxStepsZ), z + step)));
-				trMesh.addTriangle(new Triangle(aOppeside, bOppeside, cOppeside));
+				int tOA
+				int tOB
+				int tOC
+				trMesh.addTriangle(new Triangle(aOppeside, bOppeside, cOppeside, tOA, tOB, tOC));
 			}
 		}
 		trMesh.updateNormals();

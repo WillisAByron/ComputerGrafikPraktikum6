@@ -32,10 +32,6 @@ import computergraphics.terrain.GenerateTerrain;
  */
 public class CGFrame extends AbstractCGFrame {
 
-	/**
-	 * 
-	 */
-	
 	public final double MAX_X = 1;
 
 	public final double MAX_Y = 0.5;
@@ -47,7 +43,6 @@ public class CGFrame extends AbstractCGFrame {
 	private static final long serialVersionUID = 4257130065274995543L;
 
 	private static final String FILE_NAME_SPHERE = "meshes/sphere.obj";
-//	private static final String FILE_NAME_SPHERE = "meshes/untitled.obj";
 	
 	public final String heightFile = "ground/hoehenkarte_deutschland.png";
 	

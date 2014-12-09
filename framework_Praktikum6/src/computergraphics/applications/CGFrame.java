@@ -92,7 +92,7 @@ public class CGFrame extends AbstractCGFrame {
 		GenerateTerrain gt = new GenerateTerrain();
 		TriangleMesh newGround = null;
 		try {
-			newGround = gt.generateGroundWithTexture(MAX_X, MAX_Y, MAX_Z, STEP, heightFile, textureFileName);
+			newGround = gt.generateGround(MAX_X, MAX_Y, MAX_Z, STEP, heightFile, textureFileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

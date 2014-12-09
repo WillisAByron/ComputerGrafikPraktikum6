@@ -39,7 +39,7 @@ public class CameraController {
      * @param deltaX
      */
     public void mouseDeltaXLeftButton(final float deltaX) {
-//        camera.rotateVertically(deltaX * SPEED);
+        camera.rotateVertically(deltaX * SPEED);
     }
 
     /**
@@ -48,7 +48,7 @@ public class CameraController {
      * @param deltaY
      */
     public void mouseDeltaYLeftButton(final float deltaY) {
-//        camera.rotateHorizontally(-deltaY * SPEED);
+        camera.rotateHorizontally(-deltaY * SPEED);
     }
 
     /**
@@ -65,6 +65,6 @@ public class CameraController {
      * @param deltaY
      */
     public void mouseDeltaYRightButton(final float deltaY) {
-//        camera.zoom(-deltaY * SPEED);
+        camera.zoom(-deltaY * SPEED);
     }
 }

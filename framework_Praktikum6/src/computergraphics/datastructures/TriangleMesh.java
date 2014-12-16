@@ -22,7 +22,7 @@ public class TriangleMesh implements ITriangleMesh {
 	
 	private Image heighField;
 	
-	private String textureFileName;
+	private String textureFileName = "meshes/textures/karte_deutschland.png";
 	
 	private Texture texture;
 	
@@ -150,7 +150,6 @@ public class TriangleMesh implements ITriangleMesh {
 			final Vector3 colorVector = new Vector3(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
 			vertex.setColor(colorVector);
 		}
-		
 	}
 
 	@Override

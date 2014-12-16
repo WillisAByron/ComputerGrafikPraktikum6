@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
+import javax.media.opengl.GL;
 import javax.media.opengl.GLException;
 
 import com.jogamp.opengl.util.texture.Texture;
@@ -35,6 +36,8 @@ public class GenerateTerrain {
 	public static final int SMOOTH_FACTOR = 100;
 
 	public static final int ITERATIONS = 10000;
+	
+	Texture tex = null;
 
 	/**
 	 * @return
@@ -76,7 +79,6 @@ public class GenerateTerrain {
 	
 	public TriangleMesh generateGroundWithTexture(double maxX, double maxY, double maxZ, double step, String heightField, String textureFileName) throws IOException {
 		InputStream is;
-		Texture tex = null;
 		try {
 			is = new FileInputStream(textureFileName);
 			tex = TextureIO.newTexture(is, false, "jpg");

@@ -46,7 +46,7 @@ public class CGFrame extends AbstractCGFrame {
 	
 	public final String heightFile = "ground/hoehenkarte_deutschland.png";
 	
-	private final String textureFileName = "meshes/textures/karte_deutschland.jpg";
+	private final String textureFileName = "meshes/textures/karte_deutschland.png";
 	
 	private List<MovableObject> lMO = new ArrayList<>();
 	
@@ -96,7 +96,7 @@ public class CGFrame extends AbstractCGFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		TriangleMeshNode trMeshNode = new TriangleMeshNode(newGround, false, 1);
+		TriangleMeshNode trMeshNode = new TriangleMeshNode(newGround, true, 1);
 		cn.addChild(tn);
 		tn.addChild(sn);
 		sn.addChild(trMeshNode);

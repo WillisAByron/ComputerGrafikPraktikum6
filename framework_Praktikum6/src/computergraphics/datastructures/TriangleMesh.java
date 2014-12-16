@@ -22,7 +22,7 @@ public class TriangleMesh implements ITriangleMesh {
 	
 	private Image heighField;
 	
-	private String textureFileName = "meshes/textures/karte_deutschland.png";
+	private String textureFileName = "meshes/textures/karte_deutschland_fix.png";
 	
 	private Texture texture;
 	

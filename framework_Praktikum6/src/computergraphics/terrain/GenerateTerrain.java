@@ -81,7 +81,7 @@ public class GenerateTerrain {
 		InputStream is;
 		try {
 			is = new FileInputStream(textureFileName);
-			tex = TextureIO.newTexture(is, false, "png");
+			tex = TextureIO.newTexture(is, true, "png");
 		} catch (GLException | IOException e) {
 		}
 		// TODO in die zwei Schleifen muss bei addVertex auch addTextureCoordinate rein.

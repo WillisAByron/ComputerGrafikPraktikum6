@@ -46,7 +46,7 @@ public class CGFrame extends AbstractCGFrame {
 	
 	public final String heightFile = "ground/hoehenkarte_deutschland.png";
 	
-	private final String textureFileName = "meshes/textures/karte_deutschland.png";
+	private final String textureFileName = "meshes/textures/karte_deutschland_fix.png";
 	
 	private List<MovableObject> lMO = new ArrayList<>();
 	

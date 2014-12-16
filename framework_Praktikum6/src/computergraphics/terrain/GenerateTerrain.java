@@ -94,9 +94,11 @@ public class GenerateTerrain {
 						maxStepsZ), z)));
 				int c = trMesh.addVertex(new Vertex(new Vector3(x,
 						getHeight(bImage, x, z + step, maxStepsX, maxStepsZ), z + step)));
-				int tA
-				int tB
-				int tC
+				
+				
+				int tA = trMesh.addTextureCoordinateMR(new Vector3(x / maxX, z / maxZ, 0));
+				int tB = trMesh.addTextureCoordinateMR(new Vector3((x + step) / maxX, z / maxZ, 0));
+				int tC = trMesh.addTextureCoordinateMR(new Vector3(x / maxX, (z + step) / maxZ, 0));
 				trMesh.addTriangle(new Triangle(a, b, c, tA, tB, tC));
 				
 				
@@ -108,9 +110,11 @@ public class GenerateTerrain {
 						maxStepsX, maxStepsZ), z)));
 				int cOppeside = trMesh.addVertex(new Vertex(new Vector3(x, getHeight(bImage, x, z + step, maxStepsX,
 						maxStepsZ), z + step)));
-				int tOA
-				int tOB
-				int tOC
+				
+				
+				int tOA = trMesh.addTextureCoordinateMR(new Vector3((x + step) / maxX, (z + step) / maxZ, 0));
+				int tOB = trMesh.addTextureCoordinateMR(new Vector3((x + step) / maxX, z / maxZ, 0));
+				int tOC = trMesh.addTextureCoordinateMR(new Vector3(x / maxX, (z + step) / maxZ, 0));
 				trMesh.addTriangle(new Triangle(aOppeside, bOppeside, cOppeside, tOA, tOB, tOC));
 			}
 		}

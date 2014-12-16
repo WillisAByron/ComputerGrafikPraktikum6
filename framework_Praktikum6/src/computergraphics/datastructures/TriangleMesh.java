@@ -177,4 +177,11 @@ public class TriangleMesh implements ITriangleMesh {
 	public Texture getTexture() {
 		return texture;
 	}
+
+
+	@Override
+	public int addTextureCoordinateMR(Vector3 texCoord) {
+		this.textureCoordinates.add(texCoord);
+		return this.textureCoordinates.size() - 1;
+	}
 }

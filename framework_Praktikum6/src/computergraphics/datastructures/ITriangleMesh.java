@@ -88,6 +88,12 @@ public interface ITriangleMesh {
 	 * Hinzufügen einer Texture-Koordinate (u, v, -).
 	 */
 	public void addTextureCoordinate(Vector3 texCoord);
+
+	/**
+	 * Hinzufügen einer Texture-Koordinate (u, v, -).
+	 * Gibt den Index aus der Texturkoordinatenliste zurück.
+	 */
+	public int addTextureCoordinateMR(Vector3 texCoord);
 	
 	/**
 	 * Zugriff auf eine Texturkoordinate (u, v, -).

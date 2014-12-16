@@ -86,7 +86,7 @@ public class CGFrame extends AbstractCGFrame {
 	}
 
 	private Node createLandscape(Vector3 vector) {
-		ColorNode cn = new ColorNode(new Vector3(0, 0, 0), false);
+		ColorNode cn = new ColorNode(new Vector3(0, 0, 0), true);
 		ScaleNode sn = new ScaleNode(vector);
 		TranslationsNode tn = new TranslationsNode(new Vector3((vector.get(0) / 2) * (-1), 0, (vector.get(2) / 2) * (-1)));
 		GenerateTerrain gt = new GenerateTerrain();

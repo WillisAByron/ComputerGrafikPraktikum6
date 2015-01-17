@@ -7,9 +7,12 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL2;
+
 import computergraphics.math.Matrix3;
 import computergraphics.math.Vector3;
 import computergraphics.terrain.GenerateTerrain;
@@ -83,7 +86,7 @@ public class MovableObject extends Node {
 		aVector.set(1, height + 0.02);
 	}
 
-	public void tick() {
+	public void tick(LocalDateTime realTime) {
 		alpha += 0.05;
 		Vector3 aVector = (start.multiply(1-alpha)).add(end.multiply(alpha));
 		setHeigth(aVector);

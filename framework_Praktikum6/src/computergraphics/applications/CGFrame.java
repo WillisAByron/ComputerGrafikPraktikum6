@@ -5,6 +5,10 @@
  */
 package computergraphics.applications;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +18,12 @@ import computergraphics.datastructures.TriangleMesh;
 import computergraphics.framework.AbstractCGFrame;
 import computergraphics.framework.Camera;
 import computergraphics.framework.CameraController;
+import computergraphics.hlsvis.hls.Connection;
+import computergraphics.hlsvis.hls.Connections;
+import computergraphics.hlsvis.hls.HlsSimulator;
+import computergraphics.hlsvis.hls.City.Location;
+import computergraphics.hlsvis.hls.TransportNetwork;
+import computergraphics.hlsvis.hls.TransportOrder;
 import computergraphics.math.Vector3;
 import computergraphics.scenegraph.ColorNode;
 import computergraphics.scenegraph.MovableObject;
@@ -39,42 +49,52 @@ public class CGFrame extends AbstractCGFrame {
 	public final double MAX_Z = 1;
 
 	public final double STEP = 0.005;
-	
+
 	private static final long serialVersionUID = 4257130065274995543L;
 
 	private static final String FILE_NAME_SPHERE = "meshes/sphere.obj";
-	
+
 	public final String heightFile = "ground/hoehenkarte_deutschland.png";
-	
+
 	private final String textureFileName = "meshes/textures/karte_deutschland_fix.png";
-	
+
 	private List<MovableObject> lMO = new ArrayList<>();
-	
+
+	private LocalDateTime realTime = LocalDateTime.of(2014, 12, 8, 0, 0);
+
+	private HlsSimulator hlsSim;
+
 	/**
 	 * Constructor.
 	 */
 	public CGFrame(int timerInverval) {
 		super(timerInverval);
-		
+
+		// HLS Simulator starten
+		hlsSim = new HlsSimulator();
+
 		RotationNode landscapeRotation = new RotationNode(90, new Vector3(1, 0, 0));
 		landscapeRotation.addChild(createLandscape(new Vector3(4, 1, 4)));
 		getRoot().addChild(landscapeRotation);
-		
-//		List<Vector3> wP = new ArrayList<>();
-//		wP.add(new Vector3(0.45, 0, 0.45));
-//		wP.add(new Vector3(-0.45, 0, -0.45));
-//		wP.add(new Vector3(0.45, 0, -0.45));
-//		wP.add(new Vector3(-0.45, 0, 0.45));
-//		
-//		ScaleNode sN = new ScaleNode(new Vector3(0.2, 0.2, 0.2));
-//		ColorNode cN = new ColorNode(new Vector3(0, 0, 1), false);
-//		RotationNode rN = new RotationNode(0, new Vector3(0, 0, 0));
-//		TranslationsNode tN = new TranslationsNode(new Vector3(0, 0.02, 0));
-//		TriangleMeshNode tMN = new TriangleMeshNode(createTriangleMeshFromObject(FILE_NAME_SPHERE), false, 2);
-//		MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP, heightFile);
-//		getRoot().addChild(mO);
-//		
-//		lMO.add(mO);
+
+		// List<Vector3> wP = new ArrayList<>();
+		// wP.add(new Vector3(0.45, 0, 0.45));
+		// wP.add(new Vector3(-0.45, 0, -0.45));
+		// wP.add(new Vector3(0.45, 0, -0.45));
+		// wP.add(new Vector3(-0.45, 0, 0.45));
+		//
+		// ScaleNode sN = new ScaleNode(new Vector3(0.2, 0.2, 0.2));
+		// ColorNode cN = new ColorNode(new Vector3(0, 0, 1), false);
+		// RotationNode rN = new RotationNode(0, new Vector3(0, 0, 0));
+		// TranslationsNode tN = new TranslationsNode(new Vector3(0, 0.02, 0));
+		// TriangleMeshNode tMN = new
+		// TriangleMeshNode(createTriangleMeshFromObject(FILE_NAME_SPHERE),
+		// false, 2);
+		// MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP,
+		// heightFile);
+		// getRoot().addChild(mO);
+		//
+		// lMO.add(mO);
 	}
 
 	private TriangleMesh createTriangleMeshFromObject(String filePath) {
@@ -88,7 +108,8 @@ public class CGFrame extends AbstractCGFrame {
 	private Node createLandscape(Vector3 vector) {
 		ColorNode cn = new ColorNode(new Vector3(0, 0, 0), true);
 		ScaleNode sn = new ScaleNode(vector);
-		TranslationsNode tn = new TranslationsNode(new Vector3((vector.get(0) / 2) * (-1), 0, (vector.get(2) / 2) * (-1)));
+		TranslationsNode tn = new TranslationsNode(new Vector3((vector.get(0) / 2) * (-1), 0, (vector.get(2) / 2)
+				* (-1)));
 		GenerateTerrain gt = new GenerateTerrain();
 		TriangleMesh newGround = null;
 		try {
@@ -110,15 +131,31 @@ public class CGFrame extends AbstractCGFrame {
 	 */
 	@Override
 	protected void timerTick() {
-		 for (MovableObject mO : lMO) {
-			mO.tick();
+		this.setRealTime(this.getRealTime().plusMinutes(5));
+		hlsSim.tick(Date.from(this.getRealTime().atZone(ZoneOffset.systemDefault()).toInstant()));
+		createMovebleObject(hlsSim.getTransportOrderQueue().getList());
+		for (MovableObject mO : lMO) {
+			mO.tick(this.getRealTime());
 		}
+	}
+
+	private void createMovebleObject(List<TransportOrder> list) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
 	 * Program entry point.
 	 */
 	public static void main(String[] args) {
-		new CGFrame(500);
+		new CGFrame(1000);
+	}
+
+	public LocalDateTime getRealTime() {
+		return realTime;
+	}
+
+	public void setRealTime(LocalDateTime realTime) {
+		this.realTime = realTime;
 	}
 }

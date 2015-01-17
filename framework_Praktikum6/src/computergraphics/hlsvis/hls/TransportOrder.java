@@ -17,7 +17,7 @@ import computergraphics.hlsvis.hls.City.Location;
  * @author Philipp Jenke
  *
  */
-public class TransportOrder {
+public class TransportOrder implements Comparable<TransportOrder> {
 	/**
 	 * "Sendungsnummer".
 	 */
@@ -57,9 +57,8 @@ public class TransportOrder {
 	/**
 	 * Constructor
 	 */
-	public TransportOrder(int deliveryNumber, int orderNumber,
-			Location startLocation, Location targetLocation, Date startTime,
-			Date deliveryTime) {
+	public TransportOrder(int deliveryNumber, int orderNumber, Location startLocation, Location targetLocation,
+			Date startTime, Date deliveryTime) {
 		this.deliveryNumber = deliveryNumber;
 		this.orderNumber = orderNumber;
 		this.startLocation = startLocation;
@@ -76,38 +75,30 @@ public class TransportOrder {
 		JsonParser parser = Json.createParser(reader);
 		while (parser.hasNext()) {
 			Event e = parser.next();
-			if (e == Event.KEY_NAME
-					&& parser.getString().equals(HlsConstants.SENDUNGSNUMMER)) {
+			if (e == Event.KEY_NAME && parser.getString().equals(HlsConstants.SENDUNGSNUMMER)) {
 				e = parser.next();
 				deliveryNumber = Integer.parseInt(parser.getString());
-			} else if (e == Event.KEY_NAME
-					&& parser.getString().equals(HlsConstants.AUFTRAGSNUMMER)) {
+			} else if (e == Event.KEY_NAME && parser.getString().equals(HlsConstants.AUFTRAGSNUMMER)) {
 				e = parser.next();
 				orderNumber = Integer.parseInt(parser.getString());
-			} else if (e == Event.KEY_NAME
-					&& parser.getString().equals(HlsConstants.STARTLOKATION)) {
+			} else if (e == Event.KEY_NAME && parser.getString().equals(HlsConstants.STARTLOKATION)) {
 				e = parser.next();
 				startLocation = Location.valueOf(parser.getString());
-			} else if (e == Event.KEY_NAME
-					&& parser.getString().equals(HlsConstants.ZIELLOKATION)) {
+			} else if (e == Event.KEY_NAME && parser.getString().equals(HlsConstants.ZIELLOKATION)) {
 				e = parser.next();
 				targetLocation = Location.valueOf(parser.getString());
-			} else if (e == Event.KEY_NAME
-					&& parser.getString().equals(HlsConstants.STARTZEIT)) {
+			} else if (e == Event.KEY_NAME && parser.getString().equals(HlsConstants.STARTZEIT)) {
 				e = parser.next();
 				try {
-					SimpleDateFormat formatter = new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss");
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					startTime = formatter.parse(parser.getString());
 				} catch (ParseException e1) {
 					System.out.println("Failed parse date string.");
 				}
-			} else if (e == Event.KEY_NAME
-					&& parser.getString().equals(HlsConstants.ENDEZEIT)) {
+			} else if (e == Event.KEY_NAME && parser.getString().equals(HlsConstants.ENDEZEIT)) {
 				e = parser.next();
 				try {
-					SimpleDateFormat formatter = new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss");
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					deliveryTime = formatter.parse(parser.getString());
 				} catch (ParseException e1) {
 					System.out.println("Failed parse date string.");
@@ -145,16 +136,25 @@ public class TransportOrder {
 	 */
 	public String toJson() {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return "{ \"SendungsNr\":" + getDeliveryNumber() + ",\n\"AuftragsNr\":"
-				+ getOrderNumber() + ",\n\"StartLokation\":\""
-				+ getStartLocation().toString() + "\",\n\"ZielLokation\":\""
-				+ getTargetLocation().toString() + "\",\n\"Startzeit\":\""
-				+ formatter.format(getStartTime()) + "\",\n\"Endezeit\":\""
-				+ formatter.format(getDeliveryTime()) + "\"\n }";
+		return "{ \"SendungsNr\":" + getDeliveryNumber() + ",\n\"AuftragsNr\":" + getOrderNumber()
+				+ ",\n\"StartLokation\":\"" + getStartLocation().toString() + "\",\n\"ZielLokation\":\""
+				+ getTargetLocation().toString() + "\",\n\"Startzeit\":\"" + formatter.format(getStartTime())
+				+ "\",\n\"Endezeit\":\"" + formatter.format(getDeliveryTime()) + "\"\n }";
 	}
 
 	@Override
 	public String toString() {
 		return startLocation + " -> " + targetLocation;
+	}
+
+	@Override
+	public int compareTo(TransportOrder o) {
+		if(this.startTime.before(o.startTime)){
+			return -1;
+		}else if(this.startTime.after(o.startTime)){
+			return 1;
+		}else {
+			return 0;
+		}
 	}
 }

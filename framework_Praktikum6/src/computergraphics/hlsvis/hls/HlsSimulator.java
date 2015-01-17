@@ -24,9 +24,11 @@ public class HlsSimulator {
 	 * RabbitMQ-Communiction
 	 */
 	private RabbitMqCommunication transportOrderQueue = new RabbitMqCommunication(
-			HlsConstants.FRACHTAUFTRAG_QUEUE, "127.0.0.1", "hls", "hls");
+			HlsConstants.FRACHTAUFTRAG_QUEUE, "win-devel.informatik.haw-hamburg.de", "CGTeams", "Rwj9joAi");
 
 	private Date lastOrderTime;
+	
+	private TransportOrderQueue toq = new TransportOrderQueue();
 
 	/**
 	 * Constructor.
@@ -88,6 +90,8 @@ public class HlsSimulator {
 
 				transportOrderQueue.connect();
 				transportOrderQueue.sendMessage(jsonNachricht);
+				transportOrderQueue.registerMessageReceiver(toq);
+				transportOrderQueue.waitForMessages();
 				transportOrderQueue.disconnect();
 
 				System.out.println("Frachtauftrag gesendet: "
@@ -119,5 +123,9 @@ public class HlsSimulator {
 	 */
 	public Connections getConnections() {
 		return connections;
+	}
+	
+	public TransportOrderQueue getTransportOrderQueue(){
+		return this.toq;
 	}
 }

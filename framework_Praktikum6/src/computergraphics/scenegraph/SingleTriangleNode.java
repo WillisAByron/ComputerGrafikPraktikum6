@@ -23,6 +23,7 @@ public class SingleTriangleNode extends Node {
 		gl.glFlush();
 	}
 
+	@SuppressWarnings("unused")
 	private GL2 getTriangleStandart(GL2 gl) {
 		gl.glColor3f(0.75f, 0.25f, 0.25f);
 		gl.glBegin(GL.GL_TRIANGLES);
@@ -39,6 +40,7 @@ public class SingleTriangleNode extends Node {
 		return gl;
 	}
 
+	@SuppressWarnings("unused")
 	private GL2 getTriangleGreen(GL2 gl) {
 		// Set color of Triangle to green!!
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
@@ -54,6 +56,7 @@ public class SingleTriangleNode extends Node {
 		return gl;
 	}
 
+	@SuppressWarnings("unused")
 	private GL2 getQuadsStandart(GL2 gl) {
 		// Set color of Triangle to green!!
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
@@ -96,6 +99,7 @@ public class SingleTriangleNode extends Node {
 		}// i
 	}
 
+	@SuppressWarnings("unused")
 	private void drawQuad(GL2 gl) {
 		gl.glBegin(GL2.GL_QUAD_STRIP);
 		gl.glVertex3f(-.5f, .5f, 0);

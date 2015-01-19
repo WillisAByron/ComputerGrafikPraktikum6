@@ -8,12 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
-import javax.media.opengl.GL;
 import javax.media.opengl.GLException;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
-
 import computergraphics.datastructures.Triangle;
 import computergraphics.datastructures.TriangleMesh;
 import computergraphics.datastructures.Vertex;

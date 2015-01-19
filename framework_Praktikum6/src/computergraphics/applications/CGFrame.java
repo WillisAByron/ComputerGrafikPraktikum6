@@ -5,23 +5,21 @@
  */
 package computergraphics.applications;
 
-import java.time.Instant;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
-import java.io.IOException;
-import java.util.ArrayList;
 
 import computergraphics.datastructures.ObjIO;
 import computergraphics.datastructures.TriangleMesh;
 import computergraphics.framework.AbstractCGFrame;
-import computergraphics.framework.Camera;
-import computergraphics.framework.CameraController;
-import computergraphics.hlsvis.hls.Connection;
-import computergraphics.hlsvis.hls.Connections;
-import computergraphics.hlsvis.hls.HlsSimulator;
 import computergraphics.hlsvis.hls.City.Location;
+import computergraphics.hlsvis.hls.HlsSimulator;
+import computergraphics.hlsvis.hls.TransportEvent;
+import computergraphics.hlsvis.hls.TransportEvent.EventType;
 import computergraphics.hlsvis.hls.TransportNetwork;
 import computergraphics.hlsvis.hls.TransportOrder;
 import computergraphics.math.Vector3;
@@ -52,8 +50,10 @@ public class CGFrame extends AbstractCGFrame {
 
 	private static final long serialVersionUID = 4257130065274995543L;
 
-	private static final String FILE_NAME_SPHERE = "meshes/sphere.obj";
-
+	private static final String DHL_PACKAGE = "meshes/cube.obj";
+	
+	private static final String PLANE = "meshes/Plane.obj";
+	
 	public final String heightFile = "ground/hoehenkarte_deutschland.png";
 
 	private final String textureFileName = "meshes/textures/karte_deutschland_fix.png";
@@ -63,6 +63,8 @@ public class CGFrame extends AbstractCGFrame {
 	private LocalDateTime realTime = LocalDateTime.of(2014, 12, 8, 0, 0);
 
 	private HlsSimulator hlsSim;
+	
+	private RotationNode globalRotation =  new RotationNode(90, new Vector3(1, 0, 0));
 
 	/**
 	 * Constructor.
@@ -73,28 +75,9 @@ public class CGFrame extends AbstractCGFrame {
 		// HLS Simulator starten
 		hlsSim = new HlsSimulator();
 
-		RotationNode landscapeRotation = new RotationNode(90, new Vector3(1, 0, 0));
-		landscapeRotation.addChild(createLandscape(new Vector3(4, 1, 4)));
-		getRoot().addChild(landscapeRotation);
+		globalRotation.addChild(createLandscape(new Vector3(4, 1, 4)));
+		getRoot().addChild(globalRotation);
 
-		// List<Vector3> wP = new ArrayList<>();
-		// wP.add(new Vector3(0.45, 0, 0.45));
-		// wP.add(new Vector3(-0.45, 0, -0.45));
-		// wP.add(new Vector3(0.45, 0, -0.45));
-		// wP.add(new Vector3(-0.45, 0, 0.45));
-		//
-		// ScaleNode sN = new ScaleNode(new Vector3(0.2, 0.2, 0.2));
-		// ColorNode cN = new ColorNode(new Vector3(0, 0, 1), false);
-		// RotationNode rN = new RotationNode(0, new Vector3(0, 0, 0));
-		// TranslationsNode tN = new TranslationsNode(new Vector3(0, 0.02, 0));
-		// TriangleMeshNode tMN = new
-		// TriangleMeshNode(createTriangleMeshFromObject(FILE_NAME_SPHERE),
-		// false, 2);
-		// MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP,
-		// heightFile);
-		// getRoot().addChild(mO);
-		//
-		// lMO.add(mO);
 	}
 
 	private TriangleMesh createTriangleMeshFromObject(String filePath) {
@@ -135,20 +118,67 @@ public class CGFrame extends AbstractCGFrame {
 		hlsSim.tick(Date.from(this.getRealTime().atZone(ZoneOffset.systemDefault()).toInstant()));
 		createMovebleObject(hlsSim.getTransportOrderQueue().getList());
 		for (MovableObject mO : lMO) {
-			mO.tick(this.getRealTime());
+			mO.tick(this.getRealTime(), lMO);
 		}
 	}
 
 	private void createMovebleObject(List<TransportOrder> list) {
-		// TODO Auto-generated method stub
+		Date dateTimeNow = Date.from(this.getRealTime().atZone(ZoneOffset.systemDefault()).toInstant());
+		for (TransportOrder transportOrder : new ArrayList<>(list)) {
+			if (transportOrder.getStartTime().before(dateTimeNow)) {
+				createMONode(transportOrder);
+				boolean removed = false;
+				do{
+					try{
+						removed = list.remove(transportOrder);
+					}catch(ConcurrentModificationException e){
+						System.err.println("Nicht gelöscht!");
+					}
+				}while(!removed);
+			}
+		}
 		
+	}
+
+	private void createMONode(TransportOrder transportOrder) {
+		List<Vector3> wP = new ArrayList<>();
+		double[] start = getCoordinates(transportOrder.getStartLocation());
+		double[] target = getCoordinates(transportOrder.getTargetLocation());
+		wP.add(new Vector3((start[0] * 4) - 2, 0, (start[1] * 4) - 2));
+		wP.add(new Vector3((target[0] * 4) - 2, 0, (target[1] * 4) - 2));
+		double stepLength = 1 / (TransportNetwork.getEntfernung(transportOrder.getStartLocation(), transportOrder.getTargetLocation()) / 5);
+		double random = Math.random() * 10;
+		String mesh = DHL_PACKAGE;
+		ScaleNode sN = new ScaleNode(new Vector3(0.05, 0.05, 0.05));
+		boolean texture = true;
+		int number = 2;
+		if(random < 3){
+			number = 3;
+			mesh = PLANE;
+			texture = false;
+			sN = new ScaleNode(new Vector3(0.0001, 0.0001, 0.0001));
+		}
+		ColorNode cN = new ColorNode(new Vector3(0, 0, 1), texture);
+		RotationNode rN = new RotationNode(0, new Vector3(0, 0, 0));
+		TranslationsNode tN = new TranslationsNode(new Vector3(0, 0.02, 0));
+		TriangleMeshNode tMN = new TriangleMeshNode(createTriangleMeshFromObject(mesh), texture, number);
+		TransportEvent transportEvent = new TransportEvent(transportOrder.getDeliveryNumber(), transportOrder.getOrderNumber(),
+				transportOrder.getStartTime(), EventType.ABGEFAHREN, new double[]{start[0] * 100, start[1] *100});
+		MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP, stepLength, this.heightFile, transportEvent);
+		globalRotation.addChild(mO);
+
+		lMO.add(mO);
+	}
+
+	private double[] getCoordinates(Location loc) {
+		return TransportNetwork.getCity(loc).getCoords();
 	}
 
 	/**
 	 * Program entry point.
 	 */
 	public static void main(String[] args) {
-		new CGFrame(1000);
+		new CGFrame(500);
 	}
 
 	public LocalDateTime getRealTime() {

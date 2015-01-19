@@ -69,4 +69,16 @@ public class TransportEvent {
 				+ type.ordinal() + ",\n\"Gpskoords\":\n{\"X\":" + gpsCoords[0]
 				+ ",\n\"Y\":" + gpsCoords[1] + "\n}}";
 	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public void setType(EventType type) {
+		this.type = type;
+	}
+
+	public void setGpsCoords(double[] gpsCoords) {
+		this.gpsCoords = gpsCoords;
+	}
 }

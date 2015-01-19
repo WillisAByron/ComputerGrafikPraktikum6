@@ -18,14 +18,12 @@ public class ColorNode extends Node {
 	 * Shader representation.
 	 */
 	private CgGlslShader shader;
-	private boolean texture = false;
 
 	/**
 	 * Constructor
 	 */
 	public ColorNode(Vector3 color, boolean texture) {
 		this.color.copy(color);
-		this.texture = texture;
 		
 		// Use a Phong shader
 		if (texture) {

@@ -5,12 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import computergraphics.hlsvis.rabbitmq.IMessageCallback;
-import computergraphics.hlsvis.rabbitmq.RabbitMqCommunication;
 
 public class TransportOrderQueue implements IMessageCallback {
-
-	private RabbitMqCommunication transportOrderQueue = new RabbitMqCommunication(HlsConstants.FRACHTAUFTRAG_QUEUE,
-			"win-devel.informatik.haw-hamburg.de", "CGTeams", "Rwj9joAi");
 
 	@SuppressWarnings("serial")
 	private List<TransportOrder> toq = new LinkedList<TransportOrder>() {
@@ -30,7 +26,6 @@ public class TransportOrderQueue implements IMessageCallback {
 
 	@Override
 	public void messageReceived(String message) {
-//		System.out.println(message);
 		if (message.contains("{")) {
 			TransportOrder to = new TransportOrder();
 			to.fromJson(message);
@@ -39,12 +34,6 @@ public class TransportOrderQueue implements IMessageCallback {
 				Collections.sort(toq);
 			}
 		}
-//		System.out.println("=========================================================");
-//		for (TransportOrder transportOrder : toq) {
-//			System.out.println(transportOrder.getDeliveryNumber() + " Start: " + transportOrder.getStartTime());
-//		}
-//		System.out.println("Listen größe: " + toq.size());
-
 	}
 	
 	public List<TransportOrder> getList(){

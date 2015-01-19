@@ -117,7 +117,7 @@ public class CGFrame extends AbstractCGFrame {
 		this.setRealTime(this.getRealTime().plusMinutes(5));
 		hlsSim.tick(Date.from(this.getRealTime().atZone(ZoneOffset.systemDefault()).toInstant()));
 		createMovebleObject(hlsSim.getTransportOrderQueue().getList());
-		for (MovableObject mO : lMO) {
+		for (MovableObject mO : new ArrayList<>(lMO)) {
 			mO.tick(this.getRealTime(), lMO);
 		}
 	}
@@ -151,11 +151,13 @@ public class CGFrame extends AbstractCGFrame {
 		String mesh = DHL_PACKAGE;
 		ScaleNode sN = new ScaleNode(new Vector3(0.05, 0.05, 0.05));
 		boolean texture = true;
+		boolean plane = false;
 		int number = 2;
 		if(random < 3){
 			number = 3;
 			mesh = PLANE;
 			texture = false;
+			plane = true;
 			sN = new ScaleNode(new Vector3(0.0001, 0.0001, 0.0001));
 		}
 		ColorNode cN = new ColorNode(new Vector3(0, 0, 1), texture);
@@ -164,7 +166,7 @@ public class CGFrame extends AbstractCGFrame {
 		TriangleMeshNode tMN = new TriangleMeshNode(createTriangleMeshFromObject(mesh), texture, number);
 		TransportEvent transportEvent = new TransportEvent(transportOrder.getDeliveryNumber(), transportOrder.getOrderNumber(),
 				transportOrder.getStartTime(), EventType.ABGEFAHREN, new double[]{start[0] * 100, start[1] *100});
-		MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP, stepLength, this.heightFile, transportEvent);
+		MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP, stepLength, this.heightFile, transportEvent, plane);
 		globalRotation.addChild(mO);
 
 		lMO.add(mO);

@@ -28,7 +28,7 @@ import computergraphics.terrain.GenerateTerrain;
  */
 public class MovableObject extends Node {
 	
-
+	private static final double MAX_FLIGHT_HEIGHT = 0.5;
 	private double alpha = 0.00;
 	private double stepLength;
 	private Vector3 start;
@@ -42,9 +42,11 @@ public class MovableObject extends Node {
 	private List<Vector3> waypoints;
 	private TransportEvent transportEvent;
 	private HlsReturnSimulator hlsReturnSim = new HlsReturnSimulator();
-
+	private boolean plane;
+	private double planeHeight = 0;
+	
 	public MovableObject(ScaleNode sN, ColorNode cN, RotationNode rN, TranslationsNode tN, TriangleMeshNode tMeshNode,
-			List<Vector3> waypoints, double stepLength, String heightField, TransportEvent transportEvent) {
+			List<Vector3> waypoints, double stepLength, String heightField, TransportEvent transportEvent, boolean plane) {
 		this.sN = sN;
 		this.cN = cN;
 		this.rN = rN;
@@ -66,6 +68,7 @@ public class MovableObject extends Node {
 		this.start = waypoints.get(0);
 		this.end = waypoints.get(1);
 		setMatrix();
+		this.plane = plane;
 		this.transportEvent = transportEvent;
 		hlsReturnSim.sendEvent(transportEvent);
 	}
@@ -90,18 +93,35 @@ public class MovableObject extends Node {
 		rN.setMatrix(matrix);
 	}
 
-	private void setHeigth(Vector3 aVector) {
+	private void setHeigth(Vector3 aVector, double alpha) {
 		final double pictureX = (bImage.getWidth(null) * (((aVector.get(0) + 2) / 4) / GenerateTerrain.MAX_X));
 		final double pictureZ = (bImage.getHeight(null) * (((aVector.get(2) + 2 ) / 4) / GenerateTerrain.MAX_Z));
 		final double height = (new Color(bImage.getRGB((int) pictureX, (int) pictureZ)).getRed() / 255.0) * GenerateTerrain.MAX_Y;
-		aVector.set(1, height + 0.05);
+		if(plane){
+			setPlaneHeight(aVector, height, alpha);
+		}else{
+			aVector.set(1, height + 0.05 + this.planeHeight);
+		}
+	}
+	
+	private void setPlaneHeight(Vector3 aVector, double height, double alpha){
+		if(alpha <= 0.5){
+			this.planeHeight += 0.05;
+		}else{
+			this.planeHeight -= 0.05;
+		}
+		if(height + this.planeHeight + 0.05 <= MAX_FLIGHT_HEIGHT){
+			aVector.set(1, height + 0.05 + this.planeHeight);
+		}else{
+			aVector.set(1, MAX_FLIGHT_HEIGHT);
+		}
 	}
 
 	public void tick(LocalDateTime realTime, List<MovableObject> lMO) {
 		Date date = Date.from(realTime.atZone(ZoneOffset.systemDefault()).toInstant());
 		alpha += stepLength;
 		Vector3 aVector = (start.multiply(1-alpha)).add(end.multiply(alpha));
-		setHeigth(aVector);
+		setHeigth(aVector, alpha);
 		tN.setTranslationsVector(aVector);
 		if (alpha > 1) {
 			alpha = 0;

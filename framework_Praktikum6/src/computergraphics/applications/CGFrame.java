@@ -52,7 +52,7 @@ public class CGFrame extends AbstractCGFrame {
 
 	private static final String DHL_PACKAGE = "meshes/cube.obj";
 	
-	private static final String PLANE = "meshes/Plane.obj";
+	private static final String PLANE = "meshes/Plane2.obj";
 	
 	public final String heightFile = "ground/hoehenkarte_deutschland.png";
 

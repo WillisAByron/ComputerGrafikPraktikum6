@@ -42,6 +42,13 @@ public abstract class Node {
 	public int getNumberOfChildren() {
 		return children.size();
 	}
+	
+	/**
+	 * Remove the given child node from List
+	 */
+	public void removeNode(Node child){
+		children.remove(child);
+	}
 
 	/**
 	 * This method is called to draw the node using OpenGL commands. Override in

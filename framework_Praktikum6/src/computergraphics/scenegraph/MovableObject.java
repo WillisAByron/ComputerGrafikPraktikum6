@@ -44,9 +44,10 @@ public class MovableObject extends Node {
 	private HlsReturnSimulator hlsReturnSim = new HlsReturnSimulator();
 	private boolean plane;
 	private double planeHeight = 0;
+	private RotationNode globalRotation;
 	
 	public MovableObject(ScaleNode sN, ColorNode cN, RotationNode rN, TranslationsNode tN, TriangleMeshNode tMeshNode,
-			List<Vector3> waypoints, double stepLength, String heightField, TransportEvent transportEvent, boolean plane) {
+			List<Vector3> waypoints, double stepLength, String heightField, TransportEvent transportEvent, boolean plane, RotationNode globalRotation) {
 		this.sN = sN;
 		this.cN = cN;
 		this.rN = rN;
@@ -71,6 +72,7 @@ public class MovableObject extends Node {
 		this.plane = plane;
 		this.transportEvent = transportEvent;
 		hlsReturnSim.sendEvent(transportEvent);
+		this.globalRotation = globalRotation;
 	}
 
 	@Override
@@ -134,6 +136,7 @@ public class MovableObject extends Node {
 		if(aVector.equals(endWaypoint)){
 			sendEvent(EventType.ANGEKOMMEN, date, new double[]{aVector.get(0)*100, aVector.get(2)*100});
 			lMO.remove(this);
+			globalRotation.removeNode(this);
 		}
 	}
 	

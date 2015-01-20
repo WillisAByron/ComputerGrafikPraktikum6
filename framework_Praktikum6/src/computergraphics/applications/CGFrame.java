@@ -77,7 +77,6 @@ public class CGFrame extends AbstractCGFrame {
 
 		globalRotation.addChild(createLandscape(new Vector3(4, 1, 4)));
 		getRoot().addChild(globalRotation);
-
 	}
 
 	private TriangleMesh createTriangleMeshFromObject(String filePath) {
@@ -166,7 +165,7 @@ public class CGFrame extends AbstractCGFrame {
 		TriangleMeshNode tMN = new TriangleMeshNode(createTriangleMeshFromObject(mesh), texture, number);
 		TransportEvent transportEvent = new TransportEvent(transportOrder.getDeliveryNumber(), transportOrder.getOrderNumber(),
 				transportOrder.getStartTime(), EventType.ABGEFAHREN, new double[]{start[0] * 100, start[1] *100});
-		MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP, stepLength, this.heightFile, transportEvent, plane);
+		MovableObject mO = new MovableObject(sN, cN, rN, tN, tMN, wP, stepLength, this.heightFile, transportEvent, plane, globalRotation);
 		globalRotation.addChild(mO);
 
 		lMO.add(mO);

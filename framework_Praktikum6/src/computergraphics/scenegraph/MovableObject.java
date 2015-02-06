@@ -126,17 +126,18 @@ public class MovableObject extends Node {
 		setHeigth(aVector, alpha);
 		tN.setTranslationsVector(aVector);
 		if (alpha > 1) {
-			alpha = 0;
+//			alpha = 0;
 			start = end;
 //			end = waypoints.get(waypoints.indexOf(end) + 1);
 			setMatrix();
 		}
 		sendEvent(EventType.UNTERWEGS, date, new double[]{aVector.get(0)*100, aVector.get(2)*100});
 		Vector3 endWaypoint = waypoints.get(waypoints.size() - 1);
-		if(aVector.equals(endWaypoint)){
+		if(alpha >= 1){
 			sendEvent(EventType.ANGEKOMMEN, date, new double[]{aVector.get(0)*100, aVector.get(2)*100});
 			lMO.remove(this);
 			globalRotation.removeNode(this);
+			System.out.println("Test!");
 		}
 	}
 	
